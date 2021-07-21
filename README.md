@@ -9,4 +9,4 @@
 4. Run the project!
 ``` npm start ```
 
-The project should open automatically, but if not open [http://localhost:3000] to view it in your browser.
+The project should open automatically, but if not open http://localhost:3000 to view it in your browser.
