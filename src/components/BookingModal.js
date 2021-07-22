@@ -44,7 +44,7 @@ function BookingModal (props) {
         </IconButton>
         </DialogTitle>
         <DialogContent>
-            <img src='https://picsum.photos/300' alt='rocket' />
+            <img src='https://picsum.photos/id/499/300' alt='rocket' />
 <br />
           <strong>Operator:</strong> {props.operator}<br />
           <strong>Launch Date:</strong> <Moment format="MMMM D, YYYY">{props.launchDate}</Moment><br />
@@ -83,7 +83,7 @@ function BookingModal (props) {
         </DialogContent>
         <DialogActions>
 
-          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 && !props.itemIsBooked || !weightFilledIn ? true : false}>
+          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={!props.itemIsBooked && (props.weight === 0 || !weightFilledIn) ? true : false}>
             {!props.itemIsBooked ? 'Book' : 'Cancel Booking'} 
           </Button>
           {!props.itemIsBooked && <Button  onClick={props.handleClose} color="secondary" autoFocus>Cancel</Button>}
