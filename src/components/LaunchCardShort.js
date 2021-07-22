@@ -1,5 +1,6 @@
 import {useContext, useState } from 'react';
 import BookingsContext from "../store/bookings-context";
+import LaunchesContext from "../store/launches-context";
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -26,10 +27,17 @@ function LaunchCardShort(props) {
         setBookingModalOpen(false);
     };
 
+    function handleWeightChange(e) {
+      setUserWeight(e.target.value);
+    }
+
+    const launchesState = useContext(LaunchesContext);
+    const [userWeight, setUserWeight] = useState(0);
     const itemIsBooked = bookingsState.itemIsBooked(props.id);
     function toggleBookedHandler() {
         if (itemIsBooked) {
-            bookingsState.removeBooking(props.id);
+            bookingsState.removeBooking(props.id);                        
+            launchesState.removeWeight(props.id);
         } else {
             bookingsState.addBooking({
                 id: props.id,
@@ -42,10 +50,11 @@ function LaunchCardShort(props) {
                 periapsis: props.periapsis,
                 apoapsis: props.apoapsis,
                 inclination: props.inclination,
-                weight: props.weight,
+                weight: props.weight - userWeight,
                 capacity: props.capacity,
                 launchDate: props.launchDate,
             });
+            launchesState.addWeight(props.id, userWeight);
         }
         props.handleClose();
         // props.handleSnackbarOpen();
@@ -61,7 +70,7 @@ function LaunchCardShort(props) {
                 <ListItemText primary={props.title} secondary={launchMoment} />
                 {itemIsBooked ? <Button variant='outlined' color='secondary' onClick={toggleBookedHandler}>Cancel Booking</Button> :
                 <Button variant='contained' color='primary' onClick={handleOpen} disabled={props.weight === 0 ? true : false}>Book</Button>}
-                <BookingModal {...props} open={bookingModalOpen} handleOpen={handleOpen} toggleBookedHandler={toggleBookedHandler} launches={props.launches} handleClose={handleClose} itemIsBooked={itemIsBooked} />
+                <BookingModal {...props} open={bookingModalOpen} handleOpen={handleOpen} toggleBookedHandler={toggleBookedHandler} launches={props.launches} handleClose={handleClose} itemIsBooked={itemIsBooked} handleWeightChange={handleWeightChange} />
                    
                 </ListItem>;
 }

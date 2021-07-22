@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import BookingsContext from "../store/bookings-context";
+import LaunchesContext from "../store/launches-context";
 import BookingModal from './BookingModal';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -33,10 +34,13 @@ function LaunchCard(props){
   };
 
     const bookingsState = useContext(BookingsContext);
+    const launchesState = useContext(LaunchesContext);
+    const [userWeight, setUserWeight] = useState(0);
     const itemIsBooked = bookingsState.itemIsBooked(props.id);
     function toggleBookedHandler() {
         if (itemIsBooked) {
             bookingsState.removeBooking(props.id);
+            launchesState.removeWeight(props.id);
         } else {
             bookingsState.addBooking({
                 id: props.id,
@@ -53,6 +57,7 @@ function LaunchCard(props){
                 capacity: props.capacity,
                 launchDate: props.launchDate,
             });
+            launchesState.addWeight(props.id, userWeight);
         }
         handleSnackbarOpen();
     }
@@ -69,6 +74,10 @@ function LaunchCard(props){
         if(card !== null) {
             card.style.setProperty("-webkit-filter", "drop-shadow(0px  0px 0px #222)");
         }
+    }
+
+        function handleWeightChange(e) {
+      setUserWeight(e.target.value);
     }
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -112,14 +121,14 @@ function LaunchCard(props){
             <Box ><Moment format="MMMM D, YYYY">{props.launchDate}</Moment></Box>            
         </Box>
         <Box display="flex" justifyContent="flex-end">
-            <Button variant={!itemIsBooked ? "contained" : "outlined"} className={itemIsBooked ? 'cancel-booking' : ''} color={itemIsBooked ? 'secondary' : 'primary'} disabled={props.weight === 0 ? true : false} onClick={itemIsBooked ? toggleBookedHandler : handleOpen} >
+            <Button variant={!itemIsBooked ? "contained" : "outlined"} className={itemIsBooked ? 'cancel-booking' : ''} color={itemIsBooked ? 'secondary' : 'primary'} disabled={props.weight === 0 && !itemIsBooked ? true : false} onClick={itemIsBooked ? toggleBookedHandler : handleOpen} >
                 {itemIsBooked ? 'Cancel Booking' : 'Book'} 
             </Button>
         </Box>       
         
       </CardContent>
     </Card>
-    <BookingModal {...props} open={modalOpen} handleOpen={handleOpen} toggleBookedHandler={toggleBookedHandler} launches={props.launches} handleClose={handleClose} itemIsBooked={itemIsBooked} />
+    <BookingModal {...props} open={modalOpen} handleOpen={handleOpen} toggleBookedHandler={toggleBookedHandler} launches={props.launches} handleClose={handleClose} itemIsBooked={itemIsBooked} handleWeightChange={handleWeightChange}/>
     <Snackbar
         anchorOrigin={{
           vertical: 'bottom',

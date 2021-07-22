@@ -59,13 +59,17 @@ function BookingModal (props) {
             id="name"
             label="Your Weight"
             type="number"
-            InputProps={{ inputProps: { min: 0, max: props.weight, onKeyUp: (e)=>{if (parseInt(e.target.value) > parseInt(e.target.max)) {e.target.value = e.target.max} } } }}
+            InputProps={{ inputProps: { min: 0, max: props.weight, onKeyUp: (e)=>{if (parseInt(e.target.value) > parseInt(e.target.max)) {
+              e.target.value = e.target.max; 
+              props.handleWeightChange(e);
+              } } } }}
             fullWidth
+            onChange={props.handleWeightChange}
           /> }
         </DialogContent>
         <DialogActions>
 
-          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 ? true : false}>
+          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 && !props.itemIsBooked ? true : false}>
             {!props.itemIsBooked ? 'Book' : 'Cancel Booking'} 
           </Button>
           {!props.itemIsBooked && <Button  onClick={props.handleClose} color="secondary" autoFocus>Cancel</Button>}
