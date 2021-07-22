@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -15,7 +16,14 @@ import Moment from 'react-moment';
 
 
 function BookingModal (props) {
+    const [weightFilledIn, setWeightFilledIn] = useState(false);
+    const weightIsFilled = () => {
+      setWeightFilledIn(true); 
+    }
 
+    const weightIsUnfilled = () => {
+      setWeightFilledIn(false);
+    }
     function handleBookClick () {
         props.toggleBookedHandler();
         props.handleClose();
@@ -59,7 +67,13 @@ function BookingModal (props) {
             id="name"
             label="Your Weight"
             type="number"
-            InputProps={{ inputProps: { min: 0, max: props.weight, onKeyUp: (e)=>{if (parseInt(e.target.value) > parseInt(e.target.max)) {
+            InputProps={{ inputProps: { min: 0, max: props.weight, onKeyUp: (e)=>{
+              if(e.target.value > 0) {
+                  weightIsFilled();
+              } else {
+                  weightIsUnfilled()
+              };
+              if (parseInt(e.target.value) > parseInt(e.target.max)) {
               e.target.value = e.target.max; 
               props.handleWeightChange(e);
               } } } }}
@@ -69,7 +83,7 @@ function BookingModal (props) {
         </DialogContent>
         <DialogActions>
 
-          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 && !props.itemIsBooked ? true : false}>
+          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 && !props.itemIsBooked || !weightFilledIn ? true : false}>
             {!props.itemIsBooked ? 'Book' : 'Cancel Booking'} 
           </Button>
           {!props.itemIsBooked && <Button  onClick={props.handleClose} color="secondary" autoFocus>Cancel</Button>}
