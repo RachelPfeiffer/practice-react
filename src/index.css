@@ -88,3 +88,9 @@ img.rocket-logo {
 .close-button {
   float: right;
 }
+
+.fab-add-booking {
+  position: fixed!important;
+  bottom: 2em;
+  right: 2em;
+}

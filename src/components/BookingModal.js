@@ -30,6 +30,7 @@ function BookingModal (props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{!props.itemIsBooked && "Book Launch -"} {props.title}
+        <p><font color="red">{props.weight === 0 ? 'SOLD OUT' : ''}</font></p>
         <IconButton aria-label="close" onClick={props.handleClose} className='close-button'>
                   <CloseIcon />
         </IconButton>
@@ -64,8 +65,8 @@ function BookingModal (props) {
         </DialogContent>
         <DialogActions>
 
-          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"}>
-            {!props.itemIsBooked ? 'Book' : 'Cancel Booking'}
+          <Button variant={!props.itemIsBooked ? "contained" : "outlined"} onClick={handleBookClick} color={!props.itemIsBooked ? "primary" : "secondary"} disabled={props.weight === 0 ? true : false}>
+            {!props.itemIsBooked ? 'Book' : 'Cancel Booking'} 
           </Button>
           {!props.itemIsBooked && <Button  onClick={props.handleClose} color="secondary" autoFocus>Cancel</Button>}
            
