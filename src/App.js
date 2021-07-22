@@ -2,10 +2,13 @@ import MainNav from './layout/MainNav';
 import SideNav from './layout/SideNav';
 import LaunchList from './pages/LaunchList';
 import CustomerBookings from './pages/CustomerBookings';
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Switch, Route } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
+import LaunchesContext from "./store/launches-context";
+import BookingsContext from "./store/bookings-context";
+
 
 
 
@@ -13,10 +16,11 @@ import Box from '@material-ui/core/Box';
 
 function App(props) {
     const [launchesLoading, setLaunchesLoading] = useState(true);
-    const [launches, setLaunches] = useState([]);
     const [loadingError, setLoadingError] = useState(false);
+    const launchesState = useContext(LaunchesContext);
+    const bookingsState = useContext(BookingsContext);
 
-    if(launchesLoading) {
+    if(launchesState.launches.length === 0) {
     fetch('api/launches.json',
         {
         headers : { 
@@ -43,7 +47,7 @@ function App(props) {
               launchDate: entry.launch.date
             }
           })
-          setLaunches(mappedLaunches);
+          launchesState.loadLaunches(mappedLaunches);
         }, (error) => {
           setLaunchesLoading(false);
           setLoadingError(true);
@@ -60,15 +64,15 @@ function App(props) {
             <Switch>
               <Route path="/" exact >
                   <h2>Upcoming Launches</h2>
-                  <LaunchList launches={launches} loading={launchesLoading} loadingError={loadingError}  />
+                  <LaunchList launches={launchesState.launches} loading={launchesLoading} loadingError={loadingError}  />
               </Route>
               <Route path="/launches">
                   <h2>Upcoming Launches</h2>
-                  <LaunchList launches={launches} loading={launchesLoading} loadingError={loadingError} />
+                  <LaunchList launches={launchesState.launches} loading={launchesLoading} loadingError={loadingError} />
               </Route>
               <Route path="/bookings">
                   <h2>My Bookings</h2>
-                  <CustomerBookings launches={launches} loading={launchesLoading} loadingError={loadingError} />
+                  <CustomerBookings launches={bookingsState.bookings} loading={launchesLoading} loadingError={loadingError} />
               </Route>
             </Switch>
           </Box>
